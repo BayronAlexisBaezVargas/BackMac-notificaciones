@@ -2,9 +2,9 @@ spring:
   application:
     name: ms-notificaciones
   datasource:
-    url: jdbc:postgresql://localhost:5437/notificaciones_db
-    username: springuser
-    password: springpassword
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5437/notificaciones_db}
+    username: ${SPRING_DATASOURCE_USERNAME:springuser}
+    password: ${SPRING_DATASOURCE_PASSWORD:springpassword}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -22,5 +22,26 @@ spring:
             - 24a66d14-c9c3-41c1-a93b-7e5926389c91
             - api://24a66d14-c9c3-41c1-a93b-7e5926389c91
 
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:admin}
+    password: ${RABBITMQ_PASSWORD:admin123}
+    listener:
+      simple:
+        acknowledge-mode: manual
+
 server:
   port: 8085
+
+# Centralized RabbitMQ configuration for Evaluation 3
+app:
+  rabbitmq:
+    exchange: pedidos360.exchange
+    dlx: pedidos360.dlx
+    queues:
+      notificaciones: notificaciones.queue
+      dlq: notificaciones.dlq
+    routing-keys:
+      notificaciones: notificaciones.routing.key
+      dlq: notificaciones.dlq.routing.key
